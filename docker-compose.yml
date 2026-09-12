@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  bootstrap-engine:
+    image: ghcr.io/mosgarage/bootstrap-engine:latest
+    # Build locally if testing: build: .
+    volumes:
+      - target_volume:/data
+      - /var/run/docker.sock:/var/run/docker.sock # Host Docker CLI access
+    environment:
+      - REPO_URL=git@github.com:your-org/private-repo.git
+      - VOLUME_NAME=target_volume
+      - MOUNT_POINT=/data
+      - SSH_KEY=${GIT_SSH_KEY} # Pass via .env or CI secrets
+      - AZURE_TENANT=igedevteam.onmicrosoft.com
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+    # Usage Examples:
+    # command: ["clone"]
+    # command: ["inspect"]
+    # command: ["recover"]
+    command: ["clone"]
+
+volumes:
+  target_volume:
+    driver: local
